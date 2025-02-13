@@ -1,0 +1,13 @@
+services:
+  postgres:
+    container_name: fsd_postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: art
+      POSTGRES_PASSWORD: fsdArt
+      POSTGRES_DB: art
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: unless-stopped
