@@ -3,10 +3,12 @@ package com.fsd.art.model.res;
 import java.math.BigDecimal;
 
 public record PaintingRes(
-        Integer id,
+        Long id,
         String name,
+        String url,
         BigDecimal prices,
-        Integer buyerId,
-        Integer artistId
+        Long buyerId,
+        Boolean isBuy,
+        String artistName
 ) {
 }

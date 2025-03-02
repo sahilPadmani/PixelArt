@@ -5,7 +5,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -18,7 +20,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String name;
 
@@ -35,4 +37,12 @@ public class User {
 
     @OneToMany(mappedBy = "artist",fetch = FetchType.LAZY)
     private List<Painting> sold_Item;
+
+    @ManyToMany
+    @JoinTable(
+            name = "cart_painting",
+            joinColumns = @JoinColumn(name = "cart_id"),
+            inverseJoinColumns = @JoinColumn(name = "painting_id")
+    )
+    private Set<Painting> add_Cart_Item = new HashSet<>();
 }

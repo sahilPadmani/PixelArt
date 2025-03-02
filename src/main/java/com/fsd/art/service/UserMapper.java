@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @Service
 public class UserMapper {
-    public User toUser(UserReq userReq) {
+    public User getUser(UserReq userReq) {
         return User.builder()
                 .name(userReq.name())
                 .email(userReq.email())
@@ -20,7 +20,7 @@ public class UserMapper {
                 .build();
     }
 
-    public UserRes forUserRes(User user) {
+    public UserRes getUserRes(User user) {
         return new UserRes(
                 user.getId(),
                 user.getName(),

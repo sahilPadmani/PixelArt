@@ -7,19 +7,23 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PaintingMapper {
-    public Painting toPainting(PaintingReq paintingReq){
+    public Painting getPainting(PaintingReq paintingReq){
         return Painting.builder()
                 .name(paintingReq.name())
                 .prices(paintingReq.prices())
                 .build();
     }
-    public PaintingRes forPaintingRes (Painting painting){
+    public PaintingRes getPaintingRes (Painting painting){
+        var buyer = painting.getBuyer();
+
         return new PaintingRes(
             painting.getId(),
             painting.getName(),
+            painting.getUrl(),
             painting.getPrices(),
-            painting.getBuyer().getId(),
-            painting.getArtist().getId()
+                buyer == null ? null : buyer.getId(),
+            painting.getIsBuy(),
+            painting.getArtist().getName()
         );
     }
 }

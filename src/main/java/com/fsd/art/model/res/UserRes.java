@@ -3,11 +3,11 @@ package com.fsd.art.model.res;
 import java.util.List;
 
 public record UserRes(
-        Integer id,
+        Long id,
         String name,
         String email,
         String role,
-        List<Integer> purchased_Item,
-        List<Integer> sold_Item
+        List<Long> purchased_Item,
+        List<Long> sold_Item
 ) {
 }

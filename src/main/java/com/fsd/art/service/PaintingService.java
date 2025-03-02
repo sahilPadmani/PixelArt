@@ -1,10 +1,15 @@
 package com.fsd.art.service;
 
+import com.fsd.art.model.Role;
 import com.fsd.art.model.req.PaintingReq;
 import com.fsd.art.model.res.PaintingRes;
 import com.fsd.art.repository.PaintingRepository;
 import com.fsd.art.repository.UserRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PaintingService {
@@ -20,33 +25,31 @@ public class PaintingService {
         this.userRepository = userRepository;
     }
 
+    public PaintingRes getPaintingById(Long id){
+        var panting = paintingRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Panting not Found with Id %d".formatted(id)));
 
-    public PaintingRes getPainting(Integer id){
-        var painting = paintingRepository.findById(id).orElse(null);
-        if(painting == null)
-            return null;
-        return paintingMapper.forPaintingRes(painting);
+        if(panting.isBuy()){
+            throw  new EntityExistsException("Painting Already Sold");
+        }
+        return paintingMapper.getPaintingRes(panting);
     }
 
-    public PaintingRes savePainting(PaintingReq paintingReq){
-        var painting = paintingMapper.toPainting(paintingReq);
+    public List<PaintingRes> getAllPainting(){
+        return paintingRepository.findAll().stream().map(paintingMapper::getPaintingRes).toList();
+    }
 
-        var buyer =  userRepository.findById(paintingReq.buyerId()).orElse(null);
+    public Long addPainting(PaintingReq paintingReq){
+        var painting = paintingMapper.getPainting(paintingReq);
 
-        if(buyer == null)
-            return null;
+        var artist = userRepository.findById(paintingReq.artistId()).orElseThrow(() -> new EntityNotFoundException("Artist Not Found"));
 
-        var artist = userRepository.findById(paintingReq.artistId()).orElse(null);
-
-        if(artist == null)
-            return null;
+        if(artist.getRole() != Role.ARTIST){
+            throw  new EntityNotFoundException("User Must Be Artist");
+        }
 
         painting.setArtist(artist);
-        painting.setBuyer(buyer);
 
-        var savePainting = paintingRepository.save(painting);
-
-        return paintingMapper.forPaintingRes(savePainting);
+        return paintingRepository.save(painting).getId();
     }
 
 }

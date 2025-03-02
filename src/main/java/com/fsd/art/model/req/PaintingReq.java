@@ -3,8 +3,8 @@ package com.fsd.art.model.req;
 import java.math.BigDecimal;
 
 public record PaintingReq(
-        Integer buyerId,
-        Integer artistId,
+        Long buyerId,
+        Long artistId,
         BigDecimal prices,
         String name
 ) {

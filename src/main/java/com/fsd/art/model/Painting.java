@@ -16,9 +16,13 @@ public class Painting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String name;
+
+    private boolean isBuy = false;
+
+    private String url;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal prices;

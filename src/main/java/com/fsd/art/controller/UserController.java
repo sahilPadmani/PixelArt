@@ -1,10 +1,15 @@
 package com.fsd.art.controller;
 
 import com.fsd.art.model.req.UserReq;
+import com.fsd.art.model.res.PaintingRes;
 import com.fsd.art.model.res.UserRes;
 import com.fsd.art.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -16,13 +21,34 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/")
-    public UserRes save(@Valid @RequestBody UserReq userReq){
-        return userService.saveUser(userReq);
+    @PostMapping("/signup")
+    public ResponseEntity<UserRes> SignUp(@Valid @RequestBody UserReq userReq){
+        return ResponseEntity.ok(userService.signUp(userReq));
     }
 
-    @GetMapping("/{id}")
-    public UserRes getUser(@PathVariable Integer id){
-        return userService.getUser(id);
+    @PostMapping("/signin")
+    public ResponseEntity<UserRes>  SignIn(@Valid @RequestBody UserReq userReq){
+        return ResponseEntity.ok(userService.signIn(userReq));
+    }
+
+    @PostMapping("/{userId}/cart/{paintingId}")
+    public ResponseEntity<Void> AddPaintingInCart(@PathVariable Long userId, @PathVariable Long paintingId) {
+        userService.addPaintingInCart(userId, paintingId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{userId}/cart")
+    public ResponseEntity<Set<PaintingRes>> ViewCart(@PathVariable Long userId){
+        return ResponseEntity.ok(userService.viewCart(userId));
+    }
+
+    @PostMapping("/{userId}/buy/cart")
+    public ResponseEntity<List<Long>> buyCartItem(@PathVariable Long userId){
+        return ResponseEntity.ok(userService.buyCartItem(userId));
+    }
+
+    @GetMapping("/{userId}/buyitem")
+    public ResponseEntity<List<PaintingRes>> allBuyItemByUser(@PathVariable Long userId){
+        return ResponseEntity.ok(userService.allBuyItemByUser(userId));
     }
 }
