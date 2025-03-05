@@ -22,7 +22,7 @@ public class PaintingMapper {
             painting.getUrl(),
             painting.getPrices(),
                 buyer == null ? null : buyer.getId(),
-            painting.getIsBuy(),
+            painting.isBuy(),
             painting.getArtist().getName()
         );
     }

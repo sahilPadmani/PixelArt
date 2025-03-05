@@ -2,7 +2,7 @@ spring:
   application:
     name: art
   datasource:
-    url: jdbc:postgresql://localhost:5432/art
+    url: jdbc:postgresql://localhost:5555/art
     username: art
     password: fsdArt
     driver-class-name: org.postgresql.Driver
