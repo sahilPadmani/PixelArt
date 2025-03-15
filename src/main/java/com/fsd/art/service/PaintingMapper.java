@@ -11,6 +11,7 @@ public class PaintingMapper {
         return Painting.builder()
                 .name(paintingReq.name())
                 .prices(paintingReq.prices())
+                .description(paintingReq.description())
                 .build();
     }
     public PaintingRes getPaintingRes (Painting painting){
@@ -23,6 +24,7 @@ public class PaintingMapper {
             painting.getPrices(),
                 buyer == null ? null : buyer.getId(),
             painting.isBuy(),
+                painting.getDescription(),
             painting.getArtist().getName()
         );
     }

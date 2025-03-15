@@ -24,6 +24,8 @@ public class Painting {
 
     private String url;
 
+    private String description;
+
     @Column(precision = 10, scale = 2)
     private BigDecimal prices;
 

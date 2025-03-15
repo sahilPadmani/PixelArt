@@ -9,9 +9,9 @@ import com.fsd.art.repository.PaintingRepository;
 import com.fsd.art.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,7 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PaintingRepository paintingRepository;
-    private  final  PaintingMapper paintingMapper;
+    private final  PaintingMapper paintingMapper;
 
     @Autowired
     public UserService(UserRepository userRepository, UserMapper userMapper, PaintingRepository paintingRepository, PaintingMapper paintingMapper) {
@@ -78,6 +78,7 @@ public class UserService {
         return user.getAdd_Cart_Item().stream().map(paintingMapper::getPaintingRes).collect(Collectors.toSet());
     }
 
+    @Transactional
     public List<Long> buyCartItem(Long userId){
         var user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User Not Found"));
 

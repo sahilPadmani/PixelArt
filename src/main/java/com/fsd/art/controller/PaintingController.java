@@ -2,9 +2,12 @@ package com.fsd.art.controller;
 
 import com.fsd.art.model.req.PaintingReq;
 import com.fsd.art.model.res.PaintingRes;
+import com.fsd.art.service.FileUpload;
 import com.fsd.art.service.PaintingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,6 +16,8 @@ import java.util.List;
 public class PaintingController {
     private  final PaintingService paintingService;
 
+
+    @Autowired
     public PaintingController(PaintingService paintingService) {
         this.paintingService = paintingService;
     }
@@ -27,9 +32,8 @@ public class PaintingController {
         return ResponseEntity.ok(paintingService.getPaintingById(id));
     }
 
-
     @PostMapping("/")
-    public ResponseEntity<Long> addPainting(@RequestBody PaintingReq paintingReq){
-        return ResponseEntity.ok(paintingService.addPainting(paintingReq));
+    public ResponseEntity<Long> addPainting(@RequestParam("image")MultipartFile multipartFile,@RequestBody PaintingReq paintingReq){
+        return ResponseEntity.ok(paintingService.addPainting(multipartFile,paintingReq));
     }
 }

@@ -8,17 +8,21 @@ import com.fsd.art.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class PaintingService {
+    private final FileUpload fileUpload;
     private final PaintingRepository paintingRepository;
     private final PaintingMapper paintingMapper;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
-    public PaintingService(PaintingRepository paintingRepository, PaintingMapper paintingMapper, UserMapper userMapper, UserRepository userRepository) {
+    public PaintingService(FileUpload fileUpload, PaintingRepository paintingRepository, PaintingMapper paintingMapper, UserMapper userMapper, UserRepository userRepository) {
+        this.fileUpload = fileUpload;
         this.paintingRepository = paintingRepository;
         this.paintingMapper = paintingMapper;
         this.userMapper = userMapper;
@@ -38,7 +42,7 @@ public class PaintingService {
         return paintingRepository.findAll().stream().map(paintingMapper::getPaintingRes).toList();
     }
 
-    public Long addPainting(PaintingReq paintingReq){
+    public Long addPainting(MultipartFile image,PaintingReq paintingReq) {
         var painting = paintingMapper.getPainting(paintingReq);
 
         var artist = userRepository.findById(paintingReq.artistId()).orElseThrow(() -> new EntityNotFoundException("Artist Not Found"));
@@ -47,6 +51,14 @@ public class PaintingService {
             throw  new EntityNotFoundException("User Must Be Artist");
         }
 
+        String imageUrl ;
+        try {
+            imageUrl = fileUpload.uploadFile(image);
+        }catch (IOException error){
+            imageUrl = "https://res.cloudinary.com/dlswoqzhe/image/upload/v1736367840/Collaborative-Coding.-A-developer-team-working-together.-min-896x504_mnw9np.webp ";
+        }
+
+        painting.setUrl(imageUrl);
         painting.setArtist(artist);
 
         return paintingRepository.save(painting).getId();

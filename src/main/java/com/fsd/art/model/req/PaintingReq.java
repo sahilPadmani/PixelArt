@@ -6,6 +6,7 @@ public record PaintingReq(
         Long buyerId,
         Long artistId,
         BigDecimal prices,
+        String description,
         String name
 ) {
 }

@@ -9,6 +9,7 @@ public record PaintingRes(
         BigDecimal prices,
         Long buyerId,
         Boolean isBuy,
+        String description,
         String artistName
 ) {
 }
