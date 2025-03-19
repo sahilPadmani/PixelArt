@@ -75,7 +75,7 @@ public class UserService {
 
         var user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User Not Found"));
 
-        return user.getAdd_Cart_Item().stream().map(paintingMapper::getPaintingRes).collect(Collectors.toSet());
+        return user.getAdd_Cart_Item().stream().filter(e -> !e.isBuy()).map(paintingMapper::getPaintingRes).collect(Collectors.toSet());
     }
 
     @Transactional
@@ -109,5 +109,19 @@ public class UserService {
         }
 
         return user.getSold_Item().stream().map(paintingMapper::getPaintingRes).toList();
+    }
+
+    public void removePaintingInCart(Long userId, Long paintingId) {
+        var user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User Not Found"));
+
+        var painting = paintingRepository.findById(paintingId).orElseThrow(() -> new EntityNotFoundException("Painting InValid"));
+
+        if(user.getAdd_Cart_Item().parallelStream().noneMatch(e->e.getId().equals(paintingId))){
+            throw new EntityNotFoundException("Cart Not Contain item");
+        }
+
+        var removeItem = user.getAdd_Cart_Item().stream().filter(item -> !item.getId().equals(paintingId)).collect(Collectors.toSet());
+        user.setAdd_Cart_Item(removeItem);
+        userRepository.save(user);
     }
 }

@@ -7,6 +7,7 @@ import com.fsd.art.repository.PaintingRepository;
 import com.fsd.art.repository.UserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,4 +65,18 @@ public class PaintingService {
         return paintingRepository.save(painting).getId();
     }
 
+    @Transactional
+    public PaintingRes BuyItem(Long userId,Long ItemId) throws Exception {
+        var painting = paintingRepository.findById(ItemId).orElseThrow(()-> new EntityNotFoundException("Item Not Found"));
+        var user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User Not Found"));
+
+        if(painting.isBuy()){
+            throw new Exception("Painting is Sold.");
+        }
+
+        painting.setBuy(true);
+        painting.setBuyer(user);
+        paintingRepository.save(painting);
+        return paintingMapper.getPaintingRes(painting);
+    }
 }

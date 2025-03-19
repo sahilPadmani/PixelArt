@@ -37,6 +37,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{userId}/remove/cart/{paintingId}")
+    public ResponseEntity<Void> RemovePaintingInCart(@PathVariable Long userId, @PathVariable Long paintingId) {
+        userService.removePaintingInCart(userId, paintingId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{userId}/cart")
     public ResponseEntity<Set<PaintingRes>> ViewCart(@PathVariable Long userId){
         return ResponseEntity.ok(userService.viewCart(userId));
