@@ -1,3 +1,4 @@
+
 package com.fsd.art.configuration;
 
 import org.springframework.context.annotation.Bean;
@@ -7,14 +8,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableWebMvc
+@EnableWebMvc // Ensure MVC is enabled
 public class CorsConfig {
     @Bean
-    public WebMvcConfigurer corsConfiguration() {
+    public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/") // Allow all endpoints
+                registry.addMapping("/**") // Allow all endpoints
                         .allowedOrigins("http://localhost:5173") // Allow frontend URL
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
@@ -23,4 +24,3 @@ public class CorsConfig {
         };
     }
 }
-

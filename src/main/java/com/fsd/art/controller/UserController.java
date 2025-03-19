@@ -37,10 +37,9 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{userId}/remove/cart/{paintingId}")
-    public ResponseEntity<Void> RemovePaintingInCart(@PathVariable Long userId, @PathVariable Long paintingId) {
-        userService.removePaintingInCart(userId, paintingId);
-        return ResponseEntity.ok().build();
+    @GetMapping("/{id}")
+    public ResponseEntity<UserRes> getUser(@PathVariable Long id){
+        return ResponseEntity.ok(userService.getUser(id));
     }
 
     @GetMapping("/{userId}/cart")
@@ -56,5 +55,23 @@ public class UserController {
     @GetMapping("/{userId}/buyitem")
     public ResponseEntity<List<PaintingRes>> allBuyItemByUser(@PathVariable Long userId){
         return ResponseEntity.ok(userService.allBuyItemByUser(userId));
+    }
+    @GetMapping("/{userId}/solditem")
+    public ResponseEntity<List<PaintingRes>> solditems(@PathVariable Long userId){
+        return ResponseEntity.ok(userService.allSoldItemByUser(userId));
+    }
+
+    @DeleteMapping("/{userId}/remove/cart/{paintingId}")
+    public ResponseEntity<Void> RemovePaintingInCart(@PathVariable Long userId, @PathVariable Long paintingId) {
+        userService.removePaintingInCart(userId, paintingId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateUser(@PathVariable Long id,@RequestParam String username){
+        System.out.println(username);
+        userService.updateUser(id,username);
+
+        return ResponseEntity.ok().build();
     }
 }

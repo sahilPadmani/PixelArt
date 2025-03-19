@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 public class PaintingMapper {
     public Painting getPainting(PaintingReq paintingReq){
         return Painting.builder()
-                .name(paintingReq.name())
-                .prices(paintingReq.prices())
-                .description(paintingReq.description())
+                .name(paintingReq.getName())
+                .prices(paintingReq.getPrices())
+                .description(paintingReq.getDescription())
                 .build();
     }
     public PaintingRes getPaintingRes (Painting painting){

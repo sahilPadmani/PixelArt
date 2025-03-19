@@ -46,7 +46,7 @@ public class PaintingService {
     public Long addPainting(MultipartFile image,PaintingReq paintingReq) {
         var painting = paintingMapper.getPainting(paintingReq);
 
-        var artist = userRepository.findById(paintingReq.artistId()).orElseThrow(() -> new EntityNotFoundException("Artist Not Found"));
+        var artist = userRepository.findById(paintingReq.getArtistId()).orElseThrow(() -> new EntityNotFoundException("Artist Not Found"));
 
         if(artist.getRole() != Role.ARTIST){
             throw  new EntityNotFoundException("User Must Be Artist");
@@ -66,17 +66,23 @@ public class PaintingService {
     }
 
     @Transactional
-    public PaintingRes BuyItem(Long userId,Long ItemId) throws Exception {
+    public PaintingRes BuyItem(Long userId,Long ItemId)  {
         var painting = paintingRepository.findById(ItemId).orElseThrow(()-> new EntityNotFoundException("Item Not Found"));
         var user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User Not Found"));
 
         if(painting.isBuy()){
-            throw new Exception("Painting is Sold.");
+            throw new EntityNotFoundException("Painting is Sold.");
         }
 
         painting.setBuy(true);
         painting.setBuyer(user);
         paintingRepository.save(painting);
+        var artist = painting.getArtist();
+
+        artist.getSold_Item().add(painting);
+        userRepository.save(artist);
+
         return paintingMapper.getPaintingRes(painting);
     }
+
 }

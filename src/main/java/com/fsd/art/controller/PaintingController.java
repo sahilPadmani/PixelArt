@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -32,8 +33,24 @@ public class PaintingController {
         return ResponseEntity.ok(paintingService.getPaintingById(id));
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Long> addPainting(@RequestParam("image")MultipartFile multipartFile,@RequestBody PaintingReq paintingReq){
-        return ResponseEntity.ok(paintingService.addPainting(multipartFile,paintingReq));
+//    @PostMapping("/")
+//    public ResponseEntity<Long> addPainting(@RequestParam("image")MultipartFile multipartFile,@RequestParam PaintingReq paintingReq){
+//        return ResponseEntity.ok(paintingService.addPainting(multipartFile,paintingReq));
+//    }
+@PostMapping("/")
+public ResponseEntity<Long> addPainting(
+        @RequestParam("name") String title,
+        @RequestParam("description") String description,
+        @RequestParam("prices") BigDecimal prices,
+        @RequestParam("artistId") Long artistId,
+        @RequestParam("image") MultipartFile multipartFile) {
+
+    PaintingReq paintingReq = new PaintingReq(title, description, prices, artistId);
+    return ResponseEntity.ok(paintingService.addPainting(multipartFile, paintingReq));
+}
+    @PostMapping("/{userId}/buyitem/{paintingId}")
+    public ResponseEntity<PaintingRes> BuyItem(@PathVariable Long userId,@PathVariable Long paintingId){
+        return ResponseEntity.ok(paintingService.BuyItem(userId,paintingId));
     }
+
 }
